@@ -7,6 +7,8 @@ const StyledContainer = styled.section`
 `;
 
 const StyledForm = styled.form`
+  background-color: white;
+  border: 0px solid white;
   display: flex;
   flex-direction: column;
   height: 100px;

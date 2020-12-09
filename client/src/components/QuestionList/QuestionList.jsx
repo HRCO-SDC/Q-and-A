@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-const AnswerList = lazy(() => import ('../AnswerList/AnswerList.jsx'));
-const Answer = lazy(() => import ('../Answer/Answer.jsx'));
-const Question = lazy(() => import ('../Question/Question.jsx'));
-const MoreQuestions = lazy(() => import ('../MoreQuestions/MoreQuestions.jsx'));
-const AddQuestion = lazy(() => import ('../AddQuestion/AddQuestion.jsx'));
-const AnswerModal = lazy(() => import ('../AnswerModal/AnswerModal.jsx'));
-const QuestionModal = lazy(() => import ('../QuestionModal/QuestionModal.jsx'));
+import AnswerList from '../AnswerList/AnswerList.jsx';
+import Answer from '../Answer/Answer.jsx';
+import Question from '../Question/Question.jsx';
+import MoreQuestions from '../MoreQuestions/MoreQuestions.jsx';
+import AddQuestion from '../AddQuestion/AddQuestion.jsx';
+import AnswerModal from '../AnswerModal/AnswerModal.jsx';
+import QuestionModal from '../QuestionModal/QuestionModal.jsx';
 
 const Container = styled.section`
   display: flex;
@@ -60,20 +60,16 @@ const QuestionList = function(props) {
     .sort((a,b) => b.question_helpfulness - a.question_helpfulness)
     .map(question => (
       <Section key={question.question_id}>
-        <Suspense fallback={<section></section>}>
-          <Question
-            question={question}
-            product={props.product}
-            toggleAnswerForm={toggleAnswerForm}
-            updateHelp={props.updateHelp}
-          />
-        </Suspense>
-        <Suspense fallback={<section></section>}>
-          <AnswerList
-            answers={Object.values(question.answers)}
-            updateHelp={props.updateHelp}
-          />
-        </Suspense>
+        <Question
+          question={question}
+          product={props.product}
+          toggleAnswerForm={toggleAnswerForm}
+          updateHelp={props.updateHelp}
+        />
+        <AnswerList
+          answers={Object.values(question.answers)}
+          updateHelp={props.updateHelp}
+        />
       </Section>
     ));
 
@@ -101,29 +97,24 @@ const QuestionList = function(props) {
       {// Sort questions in desc order by helpfulness & render a Question component for each sorted question
       questions.length > 2 ? questions.slice(0, count) : questions
       }
-      <Suspense fallback={<section></section>}>
-        <MoreQuestionBoxes>
-          { showMoreQuestions && <MoreQuestions handleClick={handleClick}/> }
-          <AddQuestion toggleQuestionForm={toggleQuestionForm}/>
-        </MoreQuestionBoxes>
-      </Suspense>
-      <Suspense fallback={<section></section>}>
-        { showAnswerModal && <AnswerModal
-          product={props.product}
-          question={clickedQuestion}
-          showPhotosModal={showPhotosModal}
-          toggleAnswerForm={toggleAnswerForm}
-          togglePhotosModal={togglePhotosModal}
-          handleClose={handleClose}
-        /> }
-      </Suspense>
-      <Suspense fallback={<section></section>}>
-        { showQuestionModal && <QuestionModal
-          product={props.product}
-          toggleQuestionForm={toggleQuestionForm}
-          handleClose={handleClose}
-        />}
-      </Suspense>
+      <MoreQuestionBoxes>
+        { showMoreQuestions && <MoreQuestions handleClick={handleClick}/> }
+        <AddQuestion toggleQuestionForm={toggleQuestionForm}/>
+      </MoreQuestionBoxes>
+
+      { showAnswerModal && <AnswerModal
+        product={props.product}
+        question={clickedQuestion}
+        showPhotosModal={showPhotosModal}
+        toggleAnswerForm={toggleAnswerForm}
+        togglePhotosModal={togglePhotosModal}
+        handleClose={handleClose}
+      /> }
+      { showQuestionModal && <QuestionModal
+        product={props.product}
+        toggleQuestionForm={toggleQuestionForm}
+        handleClose={handleClose}
+      />}
     </Container>
   );
 }

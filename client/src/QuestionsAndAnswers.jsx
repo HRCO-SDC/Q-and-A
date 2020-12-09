@@ -1,8 +1,8 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-const SearchBar = React.lazy(() => import('./components/SearchBar/SearchBar.jsx'));
-const QuestionList = React.lazy(() => import('./components/QuestionList/QuestionList.jsx'));
+import SearchBar from './components/SearchBar/SearchBar.jsx';
+import QuestionList from './components/QuestionList/QuestionList.jsx';
 
 const Container = styled.section`
   font-family: Arial, Helvetica, sans-serif;
@@ -20,7 +20,7 @@ const QuestionsAndAnswers = function(props) {
   // Perform GET request again when helpCount updates
   useEffect(() => {
     let isMounted = true; // Keep track of whether component is mounted
-    const id = props.match.params.id; // React router provides id in props
+    const id = props.match.params.id || '25'; // React router provides id in props
     // Get questions from API & set state only if the component is still mounted
     axios.get(`http://52.26.193.201:3000/qa/${id}`)
       .then(response => {
@@ -61,18 +61,14 @@ const QuestionsAndAnswers = function(props) {
 
   return (
     <Container>
-      <Suspense fallback={<section></section>}>
-        <SearchBar
-          filterQuestions={filterQuestions}
-          resetFilter={resetFilter}
-        />
-      </Suspense>
-      <Suspense fallback={<section></section>}>
-        {questions && <QuestionList
-          questions={filtered}
-          product={product}
-          updateHelp={updateHelp}/>}
-      </Suspense>
+      <SearchBar
+        filterQuestions={filterQuestions}
+        resetFilter={resetFilter}
+      />
+      <QuestionList
+        questions={filtered}
+        product={product}
+        updateHelp={updateHelp}/>}
     </Container>
   );
 };

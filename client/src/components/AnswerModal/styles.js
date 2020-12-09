@@ -92,8 +92,7 @@ export const Thumbnails = styled.section`
 `;
 
 export const Image = styled.img`
-  border: 1px solid seashell;
-  border-radius: 5px;
+  border: 1px solid black;
   height: 50px;
   justify-self: center;
   margin: 5px;

@@ -1,6 +1,6 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-const Helpful = lazy(() => import('../Helpful/Helpful.jsx'));
+import Helpful from '../Helpful/Helpful.jsx'
 
 const Container = styled.section`
   display: flex;
@@ -40,13 +40,11 @@ const Question = function({ question, product, toggleAnswerForm, updateHelp }) {
         <p>Q: {question.question_body}</p>
       </StyledQuestion>
       <HelpfulAndAddAnswer>
-        <Suspense fallback={<section></section>}>
-          <Helpful
-            question={question.question_id}
-            helpful={question.question_helpfulness}
-            updateHelp={updateHelp}
-          />
-        </Suspense>
+        <Helpful
+          question={question.question_id}
+          helpful={question.question_helpfulness}
+          updateHelp={updateHelp}
+        />
         <p>|</p>
         <StyledText onClick={handleClick}><u>Add Answer</u></StyledText>
       </HelpfulAndAddAnswer>
