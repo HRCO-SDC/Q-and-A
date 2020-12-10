@@ -33,3 +33,22 @@ CREATE TABLE photos (
   answer_id INT NOT NULL,
   url VARCHAR (255)
 );
+
+COPY questions(product_id, question_body, question_date, asker_name, helpfulness, reported)
+FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/questions.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY answers(question_id, answer_body, answer_date, answerer_name, helpfulness)
+FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/answers.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY photos(answer_id, url)
+FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/photos.csv'
+DELIMITER ','
+CSV HEADER;
+
+
+
+-- EXPLAIN ANALYZE SELECT * FROM questions A LEFT JOIN answers B ON A.question_id = B.question_id LEFT JOIN photos C ON B.answer_id = C.answer_id;
