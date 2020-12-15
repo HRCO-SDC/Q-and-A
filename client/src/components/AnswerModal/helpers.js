@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const handleChange = function(event, setter) {
+export const handleChange = function (event, setter) {
   const { name, value } = event.target;
   setter(prev => {
     let newAnswer = Object.assign({}, prev);
@@ -11,7 +11,7 @@ export const handleChange = function(event, setter) {
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export const handleSubmit = function(event, toggler, state, path, setter) {
+export const handleSubmit = function (event, toggler, state, path, setter) {
   event.preventDefault();
   // Only allow submit with body, name, and valid email
   if (state.body && state.name && state.email) {
@@ -24,7 +24,7 @@ export const handleSubmit = function(event, toggler, state, path, setter) {
       if (state.photos) {
         body["photos"] = state.photos
       }
-      axios.post(`http://52.26.193.201:3000/qa/${path}`, body)
+      axios.post(`http://localhost:3003/qa/${path}`, body)
         .then(response => console.log(response))
         .then(() => setter(null))
         .catch(error => console.log(error));

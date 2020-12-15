@@ -28,12 +28,12 @@ const MoreQuestionBoxes = styled.section`
   width: 80%;
 `;
 
-const QuestionList = function(props) {
-  const [ showAnswerModal, setShowAnswerModal ] = useState(false);
-  const [ showQuestionModal, setShowQuestionModal ] = useState(false);
-  const [ clickedQuestion, setClickedQuestion ] = useState(null);const [ showPhotosModal, setShowPhotosModal ] = useState(false);
-  const [ showMoreQuestions, setShowMoreQuestions ] = useState(true);
-  const [ count, setCount ] = useState(2);
+const QuestionList = function (props) {
+  const [showAnswerModal, setShowAnswerModal] = useState(false);
+  const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [clickedQuestion, setClickedQuestion] = useState(null); const [showPhotosModal, setShowPhotosModal] = useState(false);
+  const [showMoreQuestions, setShowMoreQuestions] = useState(true);
+  const [count, setCount] = useState(2);
   const isInitialMount = useRef(true);
 
   // Utilizes a useRef to ensure effect does not fire on mount; only on updates after mounting
@@ -47,17 +47,17 @@ const QuestionList = function(props) {
     }
   }, [count]);
 
-  const toggleAnswerForm = function(bool, query) {
+  const toggleAnswerForm = function (bool, query) {
     setShowAnswerModal(bool);
     query && setClickedQuestion(query);
   };
 
-  const toggleQuestionForm = function(bool) {
+  const toggleQuestionForm = function (bool) {
     setShowQuestionModal(bool);
   };
 
   const questions = props.questions
-    .sort((a,b) => b.question_helpfulness - a.question_helpfulness)
+    .sort((a, b) => b.helpfulness - a.helpfulness)
     .map(question => (
       <Section key={question.question_id}>
         <Question
@@ -73,11 +73,11 @@ const QuestionList = function(props) {
       </Section>
     ));
 
-  const togglePhotosModal = function(bool) {
+  const togglePhotosModal = function (bool) {
     setShowPhotosModal(bool);
   };
 
-  const handleClose = function(event) {
+  const handleClose = function (event) {
     const name = event.target.getAttribute('name');
     if (name === 'answer-background' || name === 'answer-close-btn') {
       toggleAnswerForm(false);
@@ -88,18 +88,18 @@ const QuestionList = function(props) {
     }
   };
 
-  const handleClick = function(event) {
+  const handleClick = function (event) {
     setCount(prev => prev + 2);
   };
 
   return (
     <Container>
       {// Sort questions in desc order by helpfulness & render a Question component for each sorted question
-      questions.length > 2 ? questions.slice(0, count) : questions
+        questions.length > 2 ? questions.slice(0, count) : questions
       }
       <MoreQuestionBoxes>
-        { showMoreQuestions && <MoreQuestions handleClick={handleClick}/> }
-        <AddQuestion toggleQuestionForm={toggleQuestionForm}/>
+        {showMoreQuestions && <MoreQuestions handleClick={handleClick} />}
+        <AddQuestion toggleQuestionForm={toggleQuestionForm} />
       </MoreQuestionBoxes>
 
       { showAnswerModal && <AnswerModal
@@ -109,7 +109,7 @@ const QuestionList = function(props) {
         toggleAnswerForm={toggleAnswerForm}
         togglePhotosModal={togglePhotosModal}
         handleClose={handleClose}
-      /> }
+      />}
       { showQuestionModal && <QuestionModal
         product={props.product}
         toggleQuestionForm={toggleQuestionForm}

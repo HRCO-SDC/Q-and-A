@@ -25,11 +25,11 @@ const AnswerMetadata = styled.article`
   width: 375px;
 `;
 
-const Answer = function(props) {
+const Answer = function (props) {
   // Helper Function for formatting date
-  const transformDate = function(date) {
-    let updated = new Date(props.answer.date);
-    return dateFormat( updated, 'mmmm d, yyyy');
+  const transformDate = function (date) {
+    let updated = new Date(props.answer.answer_date);
+    return dateFormat(updated, 'mmmm d, yyyy');
     /*updated = updated.toString().split(' ').slice(1, 4);
     updated[1] = updated[1].concat(',');
     return updated.join(' ');*/
@@ -38,21 +38,21 @@ const Answer = function(props) {
   return (
     <Container>
       <StyledAnswer>
-        <p><strong style={{ fontSize: '16px'}}>A: </strong> {props.answer.body}</p>
+        <p><strong style={{ fontSize: '16px' }}>A: </strong> {props.answer.body}</p>
       </StyledAnswer>
       <Thumbnails style={{ width: '375px' }}>
-        {props.answer.photos && props.answer.photos.map(photo => <Image src={photo}/>)}
+        {props.answer.photos && props.answer.photos.map(photo => <Image src={photo} />)}
       </Thumbnails>
       <AnswerMetadata>
-        <p>by {props.answer.answerer_name}, {transformDate(props.answer.date)}</p>
+        <p>by {props.answer.answerer_name}, {transformDate(props.answer.answer_date)}</p>
         <p>|</p>
         <Helpful
-          answer={props.answer.id}
+          answer={props.answer.answer_id}
           helpful={props.answer.helpfulness}
           updateHelp={props.updateHelp}
         />
         <p>|</p>
-        <Report answer={props.answer.id}/>
+        <Report answer={props.answer.answer_id} />
       </AnswerMetadata>
     </Container>
   );

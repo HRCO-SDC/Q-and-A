@@ -5,13 +5,13 @@ CREATE DATABASE qanda;
 
 \c qanda;
 
-DROP TABLE IF EXISTS questions;
-DROP TABLE IF EXISTS answers;
-DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS questions CASCADE;
+DROP TABLE IF EXISTS answers CASCADE;
+DROP TABLE IF EXISTS photos CASCADE;
 
 CREATE TABLE questions (
   question_id SERIAL PRIMARY KEY,
-  product_id INT,
+  product_id INT NOT NULL,
   question_body TEXT,
   question_date DATE,
   asker_name VARCHAR (255),
@@ -21,25 +21,35 @@ CREATE TABLE questions (
 
 CREATE TABLE answers (
   answer_id SERIAL PRIMARY KEY,
-  question_id INT,
+  question_id INT NOT NULL,
   answer_body TEXT,
   answer_date DATE,
   answerer_name VARCHAR (255),
-  helpfulness INT
+  helpfulness INT,
+  reported BOOLEAN,
+  CONSTRAINT fk_question
+    FOREIGN KEY(question_id)
+      REFERENCES questions(question_id)
 );
+CREATE INDEX index_question_id ON answers(question_id);
 
 CREATE TABLE photos (
   photo_id SERIAL PRIMARY KEY,
   answer_id INT NOT NULL,
-  url VARCHAR (255)
+  url VARCHAR (255),
+  CONSTRAINT fk_answer
+    FOREIGN KEY(answer_id)
+      REFERENCES answers(answer_id)
 );
+
+CREATE INDEX index_answer_id ON photos(answer_id);
 
 COPY questions(product_id, question_body, question_date, asker_name, helpfulness, reported)
 FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/questions.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY answers(question_id, answer_body, answer_date, answerer_name, helpfulness)
+COPY answers(question_id, answer_body, answer_date, answerer_name, helpfulness, reported)
 FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/answers.csv'
 DELIMITER ','
 CSV HEADER;

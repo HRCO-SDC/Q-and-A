@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Underscore } from '../AnswerModal/styles.js';
 
-const Report = function(props) {
-  const [ clicked, setClicked ] = useState(false);
+const Report = function (props) {
+  const [clicked, setClicked] = useState(false);
 
-  const handleClick = function(event) {
+  const handleClick = function (event) {
     setClicked(true);
-    axios.put(`http://52.26.193.201:3000/qa/answer/${props.answer}/report`)
+    axios.put(`http://localhost:3003/qa/answer/${props.answer}/report`)
       .then(res => console.log(res))
       .catch(error => console.log(error));
   };
