@@ -24,11 +24,11 @@ const QuestionsAndAnswers = function (props) {
     // Get questions from API & set state only if the component is still mounted
     axios.get(`http://localhost:3003/qa/${id}`)
       .then(response => {
-        console.log("RESPOnSE", response.data)
+        console.log("RESPOnSE", response.results.data)
         if (isMounted) {
           // removed results from response.data.results
-          setQuestions(response.data);
-          setFiltered(response.data);
+          setQuestions(response.results.data);
+          setFiltered(response.results.data);
         }
       })
       .catch(error => console.log(error));

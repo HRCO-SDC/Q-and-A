@@ -1,9 +1,9 @@
-DROP DATABASE IF EXISTS qanda;
+-- DROP DATABASE IF EXISTS qanda;
 
 
-CREATE DATABASE qanda;
+CREATE DATABASE qanda1;
 
-\c qanda;
+\c qanda1;
 
 DROP TABLE IF EXISTS questions CASCADE;
 DROP TABLE IF EXISTS answers CASCADE;
@@ -45,17 +45,17 @@ CREATE TABLE photos (
 CREATE INDEX index_answer_id ON photos(answer_id);
 
 COPY questions(product_id, question_body, question_date, asker_name, helpfulness, reported)
-FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/questions.csv'
+FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/questionstest.csv'
 DELIMITER ','
 CSV HEADER;
 
 COPY answers(question_id, answer_body, answer_date, answerer_name, helpfulness, reported)
-FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/answers.csv'
+FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/answerstest.csv'
 DELIMITER ','
 CSV HEADER;
 
 COPY photos(answer_id, url)
-FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/photos.csv'
+FROM '/Users/alirangwala/Documents/HackReactor/ClarkFECSource/photostest.csv'
 DELIMITER ','
 CSV HEADER;
 

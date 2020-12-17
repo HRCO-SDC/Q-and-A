@@ -41,7 +41,7 @@ createPhoto = (callback, id, url) => {
 // list questions
 readQuestions = (callback, id) => {
 
-  let sqlQuery = 'SELECT row_to_json(ques) AS results FROM (SELECT A.*, (SELECT json_agg(ans) FROM (select * from answers where question_id = A.question_id) ans) as answers from questions as A) ques WHERE ques.product_id = $1 AND ques.reported = FALSE LIMIT 10'
+  let sqlQuery = 'SELECT to_json(ques) AS results FROM (SELECT A.*, (SELECT json_agg(ans) FROM (SELECT * FROM answers WHERE question_id = A.question_id ) ans ) AS answers FROM questions as A LIMIT 10) ques WHERE ques.product_id = $1 AND ques.reported = FALSE LIMIT 20;'
 
 
   // 'SELECT A.question_body, A.question_date , json_agg((B.answer_id, B.answer_body)) as answers FROM questions A JOIN answers B ON A.question_id = B.question_id GROUP BY A.question_body, A.question_date LIMIT 10'
@@ -56,7 +56,8 @@ readQuestions = (callback, id) => {
 
 // list answers
 readAnswers = (callback, id) => {
-  let sqlQuery = 'SELECT A.*, B.photo_id, B.url FROM answers A inner join photos B on A.answer_id = B. answer_id WHERE question_id = $1 AND reported = FALSE LIMIT 10'
+  let sqlQuery = 'SELECT COALESCE(json_agg(ans),json_build_array()) as results FROM (SELECT A.*, (SELECT COALESCE(json_agg(phots),json_build_array())  FROM (SELECT * FROM photos WHERE answer_id = A.answer_id) phots) AS photos FROM answers as A) ans WHERE ans.question_id = $1 AND ans.reported = FALSE LIMIT 10;'
+  // 'SELECT A.*, B.photo_id, B.url FROM answers A inner join photos B on A.answer_id = B. answer_id WHERE question_id = $1 AND reported = FALSE LIMIT 10'
   pool.query(sqlQuery, [id], (err, res) => {
     if (err) {
       throw err

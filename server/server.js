@@ -26,7 +26,8 @@ app.use(compression());
 
 // {
 //   "question_body": "TEST",
-//   "asker_name": "TEST"
+//   "asker_name": "TEST",
+//   "email": test@test.com
 // }
 
 //POST Question
@@ -43,8 +44,8 @@ app.post('/qa/:product_id', (req, res) => {
 // {
 //   "answer_body": "TEST",
 //   "answerer_name": "TEST",
-//   "photo": "TEST"
-
+//   "photo": "TEST",
+//   "email": test@test.com
 // }
 //POST answer
 app.post('/qa/:question_id/answers', (req, res) => {
@@ -72,7 +73,7 @@ app.get('/qa/:product_id', (req, res) => {
     if (err) {
       res.status(400).send(err)
     } else {
-      res.status(200).json(data.rows)
+      res.status(200).send(data.rows[0])
     }
   }, req.params.product_id)
 });
@@ -83,7 +84,7 @@ app.get('/qa/:question_id/answers', (req, res) => {
     if (err) {
       res.status(400).send(err)
     } else {
-      res.status(200).json(data.rows)
+      res.status(200).send(data.rows[0])
     }
   }, req.params.question_id)
 });
