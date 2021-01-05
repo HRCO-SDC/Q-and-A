@@ -44,7 +44,7 @@ app.post('/qa/:product_id', (req, res) => {
 // {
 //   "answer_body": "TEST",
 //   "answerer_name": "TEST",
-//   "photo": "TEST",
+//   "photos": [{"url": "TEST"}],
 //   "email": test@test.com
 // }
 //POST answer
@@ -54,17 +54,8 @@ app.post('/qa/:question_id/answers', (req, res) => {
       res.status(400).send(err)
     } else {
       res.send(data)
-      if (req.body.photo) {
-        queries.createPhoto((err, data) => {
-          if (err) {
-            res.send(err)
-          } else {
-            console.log("Success")
-          }
-        }, data.rows[0].answer_id, req.body.photo)
-      }
     }
-  }, req.params.question_id, req.body.answer_body, req.body.answerer_name, req.body.email)
+  }, req.params.question_id, req.body.body, req.body.answerer_name, req.body.email, req.body.photos)
 });
 
 // GET questions
@@ -73,7 +64,7 @@ app.get('/qa/:product_id', (req, res) => {
     if (err) {
       res.status(400).send(err)
     } else {
-      res.status(200).send(data.rows[0])
+      res.status(200).send(data.rows)
     }
   }, req.params.product_id)
 });
@@ -84,7 +75,7 @@ app.get('/qa/:question_id/answers', (req, res) => {
     if (err) {
       res.status(400).send(err)
     } else {
-      res.status(200).send(data.rows[0])
+      res.status(200).send(data.rows)
     }
   }, req.params.question_id)
 });

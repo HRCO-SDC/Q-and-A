@@ -1,8 +1,12 @@
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-  host: 'localhost',
-  database: 'qanda'
+  host: '3.139.37.166',
+  port: 5432,
+  database: 'qanda1',
+  user: 'postgres',
+  password: 'postgresftw',
+  ssl: { rejectUnauthorized: false }
 })
 
 // add question
@@ -17,20 +21,9 @@ createQuestion = (callback, id, body, name, email) => {
 }
 
 // add answer
-createAnswer = (callback, id, body, name, email) => {
-  let sqlQuery = 'INSERT INTO answers (question_id, answer_body, answer_date, answerer_name, helpfulness, reported) VALUES ($1, $2, NOW(), $3, 0, FALSE) RETURNING answer_id;'
-  pool.query(sqlQuery, [id, body, name], (err, res) => {
-    if (err) {
-      throw err
-    }
-    callback(null, res)
-  })
-}
-
-// add photo
-createPhoto = (callback, id, url) => {
-  let sqlQuery = 'INSERT INTO photos (answer_id, url) VALUES ($1, $2)'
-  pool.query(sqlQuery, [id, url], (err, res) => {
+createAnswer = (callback, id, body, name, email, photos) => {
+  let sqlQuery = 'INSERT INTO answers (question_id, body, date, answerer_name, helpfulness, reported, photos) VALUES ($1, $2, NOW(), $3, 0, FALSE, $4) RETURNING answer_id;'
+  pool.query(sqlQuery, [id, body, name, JSON.stringify(photos)], (err, res) => {
     if (err) {
       throw err
     }
@@ -41,11 +34,8 @@ createPhoto = (callback, id, url) => {
 // list questions
 readQuestions = (callback, id) => {
 
-  let sqlQuery = 'SELECT to_json(ques) AS results FROM (SELECT A.*, (SELECT json_agg(ans) FROM (SELECT * FROM answers WHERE question_id = A.question_id ) ans ) AS answers FROM questions as A LIMIT 10) ques WHERE ques.product_id = $1 AND ques.reported = FALSE LIMIT 20;'
+  let sqlQuery = 'SELECT json_agg(ques) AS results FROM (SELECT A.*, (SELECT COALESCE(json_agg(ans),json_build_array())  FROM (SELECT * FROM answers WHERE question_id = A.question_id ) ans ) AS answers FROM questions as A LIMIT 5) ques WHERE ques.product_id = $1'
 
-
-  // 'SELECT A.question_body, A.question_date , json_agg((B.answer_id, B.answer_body)) as answers FROM questions A JOIN answers B ON A.question_id = B.question_id GROUP BY A.question_body, A.question_date LIMIT 10'
-  // WHERE product_id = $1 AND questions.reported = FALSE
   pool.query(sqlQuery, [id], (err, res) => {
     if (err) {
       throw err
@@ -56,7 +46,8 @@ readQuestions = (callback, id) => {
 
 // list answers
 readAnswers = (callback, id) => {
-  let sqlQuery = 'SELECT COALESCE(json_agg(ans),json_build_array()) as results FROM (SELECT A.*, (SELECT COALESCE(json_agg(phots),json_build_array())  FROM (SELECT * FROM photos WHERE answer_id = A.answer_id) phots) AS photos FROM answers as A) ans WHERE ans.question_id = $1 AND ans.reported = FALSE LIMIT 10;'
+  let sqlQuery = 'SELECT * FROM answers WHERE question_id = $1'
+  // 'SELECT COALESCE(json_agg(ans),json_build_array()) as results FROM (SELECT A.*, (SELECT COALESCE(json_agg(phots),json_build_array())  FROM (SELECT * FROM photos WHERE answer_id = A.answer_id) phots) AS photos FROM answers as A) ans WHERE ans.question_id = $1 AND ans.reported = FALSE LIMIT 10;'
   // 'SELECT A.*, B.photo_id, B.url FROM answers A inner join photos B on A.answer_id = B. answer_id WHERE question_id = $1 AND reported = FALSE LIMIT 10'
   pool.query(sqlQuery, [id], (err, res) => {
     if (err) {
@@ -109,4 +100,4 @@ reportAnswer = (callback, id) => {
   })
 }
 
-module.exports = { readQuestions, readAnswers, createQuestion, createAnswer, createPhoto, incQuestion, incAnswer, reportQuestion, reportAnswer };
+module.exports = { readQuestions, readAnswers, createQuestion, createAnswer, incQuestion, incAnswer, reportQuestion, reportAnswer };
